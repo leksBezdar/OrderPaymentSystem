@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderPaymentSystem.Orders.Web", "OrderPaymentSystem.Orders.Web\OrderPaymentSystem.Orders.Web.csproj", "{FC945BDD-5014-4ADC-A5B3-756A0B8B9051}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderPaymentSystem.Orders.Domain", "OrderPaymentSystem.Orders.Domain\OrderPaymentSystem.Orders.Domain.csproj", "{AA1CE4BC-C074-4BB4-9DC4-F74C93DCF730}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderPaymentSystem.Orders.Application", "OrderPaymentSystem.Orders.Application\OrderPaymentSystem.Orders.Application.csproj", "{9579D9F2-6D0D-469B-9763-F795DF8648DE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AA1CE4BC-C074-4BB4-9DC4-F74C93DCF730} = {AA1CE4BC-C074-4BB4-9DC4-F74C93DCF730}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MigrationsScripts", "MigrationsScripts", "{A837ABB5-0606-4350-94B3-C1C1D9CE74F1}"
+	ProjectSection(SolutionItems) = preProject
+		AddMigrations.ps1 = AddMigrations.ps1
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC945BDD-5014-4ADC-A5B3-756A0B8B9051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC945BDD-5014-4ADC-A5B3-756A0B8B9051}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC945BDD-5014-4ADC-A5B3-756A0B8B9051}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC945BDD-5014-4ADC-A5B3-756A0B8B9051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA1CE4BC-C074-4BB4-9DC4-F74C93DCF730}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA1CE4BC-C074-4BB4-9DC4-F74C93DCF730}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA1CE4BC-C074-4BB4-9DC4-F74C93DCF730}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA1CE4BC-C074-4BB4-9DC4-F74C93DCF730}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9579D9F2-6D0D-469B-9763-F795DF8648DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9579D9F2-6D0D-469B-9763-F795DF8648DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9579D9F2-6D0D-469B-9763-F795DF8648DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9579D9F2-6D0D-469B-9763-F795DF8648DE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {910B2A64-085F-495A-8606-423246EA1897}
+	EndGlobalSection
+EndGlobal
