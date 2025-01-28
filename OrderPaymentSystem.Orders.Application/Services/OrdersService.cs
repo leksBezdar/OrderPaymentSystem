@@ -1,7 +1,10 @@
-﻿using OrderPaymentSystem.Orders.Application.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using OrderPaymentSystem.Orders.Application.Abstractions;
+using OrderPaymentSystem.Orders.Application.Mappers;
 using OrderPaymentSystem.Orders.Application.Models.Orders;
 using OrderPaymentSystem.Orders.Domain;
 using OrderPaymentSystem.Orders.Domain.Entities;
+using OrderPaymentSystem.Orders.Domain.Exceptions;
 
 namespace OrderPaymentSystem.Orders.Application.Services
 {
@@ -10,6 +13,11 @@ namespace OrderPaymentSystem.Orders.Application.Services
         // TODO: Вынести отсюда всю логику с маппингом в статик методы сущностей
         public async Task<OrderDTO> Create(CreateOrderDTO order)
         {
+            if (order.Cart == null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
+
             var cart = await cartsService.Create(order.Cart);
             var orderEntity = new OrderEntity()
             {
@@ -23,32 +31,42 @@ namespace OrderPaymentSystem.Orders.Application.Services
 
             await context.SaveChangesAsync();
 
-            return new OrderDTO()
-            {
-                Id = orderSaveResultEntity.Id,
-                CustomerId = orderSaveResultEntity.CustomerId!.Value,
-                Cart = cart,
-                Name = orderSaveResultEntity.Name,
-                OrderNumber = orderSaveResultEntity.OrderNumber
-            };
+            return orderSaveResultEntity.ToDTO();
         }
 
-        public Task<List<OrderDTO>> GetAll()
+        public async Task<List<OrderDTO>> GetAll()
         {
-            throw new NotImplementedException();
+            var entity = await context.Orders
+                .Include(o => o.Cart)
+                .ThenInclude(c => c.CartItems)
+                .ToListAsync();
+
+            return entity.ConvertAll(x => x.ToDTO());
         }
 
-        public Task<OrderDTO> GetById(Guid orderId)
+        public async Task<OrderDTO> GetById(long orderId)
         {
-            throw new NotImplementedException();
+            var entity = await context.Orders
+                .Include(o => o.Cart)
+                .ThenInclude(c => c.CartItems)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            return entity == null ? throw new EntityNotFoundException("Order", "Id", orderId) : entity.ToDTO();
         }
 
-        public Task<List<OrderDTO>> GetByUser(Guid cutomerId)
+        public async Task<List<OrderDTO>> GetByUser(long cutomerId)
         {
-            throw new NotImplementedException();
+            var entity = await context.Orders
+                .Include(o => o.Cart)
+                .ThenInclude(c => c.CartItems)
+                .Where(o => o.CustomerId == cutomerId)
+                .ToListAsync();
+
+            return entity.ConvertAll(x => x.ToDTO());
         }
 
-        public Task Reject(Guid orderId)
+        // TODO: Добавить статусную модель для заказов
+        public Task Reject(long orderId)
         {
             throw new NotImplementedException();
         }

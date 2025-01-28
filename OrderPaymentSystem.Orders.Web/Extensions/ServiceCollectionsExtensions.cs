@@ -1,8 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OrderPaymentSystem.Orders.Application.Abstractions;
 using OrderPaymentSystem.Orders.Application.Services;
 using OrderPaymentSystem.Orders.Domain;
+using OrderPaymentSystem.Orders.Domain.Entities;
+using OrderPaymentSystem.Orders.Domain.Models;
+using OrderPaymentSystem.Orders.Domain.Options;
+using System.Text;
 
 namespace OrderPaymentSystem.Orders.Web.Extensions;
 
@@ -53,8 +61,7 @@ public static class ServiceCollectionsExtensions
         return builder;
     }
 
-
-    // Сервисы из application слоя, пока пусто
+    // Сервисы из application слоя
     public static WebApplicationBuilder AddApplicationServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<ICartsService, CartsService>();
@@ -66,6 +73,61 @@ public static class ServiceCollectionsExtensions
     // Сервисы из интеграций, пока пусто
     public static WebApplicationBuilder AddIntegrationServices(this WebApplicationBuilder builder)
     {
+        return builder;
+    }
+
+    public static WebApplicationBuilder AddBearerAuthentication(this WebApplicationBuilder builder)
+    {
+        builder.Services
+            .AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.UseSecurityTokenValidators = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(
+                        builder.Configuration["Authentication:TokenPrivateKey"]!)),
+                    ValidIssuer = "test",
+                    ValidAudience = "test",
+                    // ValidateIssuer = true,
+                    // ValidateAudience = true,
+                    // ValidateLifetime = true,
+                    // ValidateIssuerSigningKey = true
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = false
+                };
+            });
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("Admin", policy => policy.RequireRole(RolesEnum.Admin.Value))
+            .AddPolicy("Merchant", policy => policy.RequireRole(RolesEnum.Merchant.Value))
+            .AddPolicy("User", policy => policy.RequireRole(RolesEnum.User.Value));
+
+        builder.Services.AddTransient<IAuthService, AuthService>();
+        builder.Services.AddDefaultIdentity<UserEntity>(options =>
+        {
+            options.SignIn.RequireConfirmedAccount = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireNonAlphanumeric = false;
+        })
+            .AddEntityFrameworkStores<OrdersDbContext>()
+            .AddUserManager<UserManager<UserEntity>>()
+            .AddUserStore<UserStore<UserEntity, IdentityRoleEntity, OrdersDbContext, long>>();
+
+        return builder;
+    }
+
+    public static WebApplicationBuilder AddOptions(this WebApplicationBuilder builder)
+    {
+        builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Authentication"));
+
         return builder;
     }
 }

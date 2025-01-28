@@ -5,9 +5,9 @@ namespace OrderPaymentSystem.Orders.Application.Abstractions
     public interface IOrdersService
     {
         Task<OrderDTO> Create(CreateOrderDTO order);
-        Task<OrderDTO> GetById(Guid orderId);
-        Task<List<OrderDTO>> GetByUser(Guid cutomerId);
+        Task<OrderDTO> GetById(long orderId);
+        Task<List<OrderDTO>> GetByUser(long cutomerId);
         Task<List<OrderDTO>> GetAll();
-        Task Reject(Guid orderId);
+        Task Reject(long orderId);
     }
 }
