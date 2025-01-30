@@ -10,6 +10,7 @@ using OrderPaymentSystem.Orders.Domain;
 using OrderPaymentSystem.Orders.Domain.Entities;
 using OrderPaymentSystem.Orders.Domain.Models;
 using OrderPaymentSystem.Orders.Domain.Options;
+using OrderPaymentSystem.Orders.Web.BackgroundServices;
 using System.Text;
 
 namespace OrderPaymentSystem.Orders.Web.Extensions;
@@ -66,6 +67,7 @@ public static class ServiceCollectionsExtensions
     {
         builder.Services.AddScoped<ICartsService, CartsService>();
         builder.Services.AddScoped<IOrdersService, OrdersService>();
+        builder.Services.AddScoped<IMerchantService, MerchantService>();
 
         return builder;
     }
@@ -73,6 +75,12 @@ public static class ServiceCollectionsExtensions
     // Сервисы из интеграций, пока пусто
     public static WebApplicationBuilder AddIntegrationServices(this WebApplicationBuilder builder)
     {
+        return builder;
+    }
+
+    public static WebApplicationBuilder AddBackgroundServices(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddHostedService<CreateOrderConsumer>();
         return builder;
     }
 
@@ -127,6 +135,7 @@ public static class ServiceCollectionsExtensions
     public static WebApplicationBuilder AddOptions(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Authentication"));
+        builder.Services.Configure<RabbitMqOptions>(builder.Configuration.GetSection("RabbitMQ"));
 
         return builder;
     }

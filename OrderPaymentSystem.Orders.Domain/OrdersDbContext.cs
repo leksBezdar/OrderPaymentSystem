@@ -18,4 +18,5 @@ public sealed class OrdersDbContext : IdentityDbContext<UserEntity, IdentityRole
     public DbSet<CartEntity> Carts { get; set; } = null!;
     public DbSet<CartItemEntity> CartItems { get; set; } = null!;
     public DbSet<OrderEntity> Orders { get; set; } = null!;
+    public DbSet<MerchantEntity> Merchants { get; set; } = null!;
 }

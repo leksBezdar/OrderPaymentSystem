@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OrderPaymentSystem.Orders.Application.Abstractions;
 using OrderPaymentSystem.Orders.Application.Models.Orders;
 using System.Text.Json;
@@ -34,6 +35,7 @@ public class OrdersController(IOrdersService ordersService, ILogger<OrdersContro
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll()
     {
         logger.LogInformation($"Method api/orders/ started.");

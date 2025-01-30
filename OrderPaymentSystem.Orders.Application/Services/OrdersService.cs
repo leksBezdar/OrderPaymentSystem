@@ -13,6 +13,14 @@ namespace OrderPaymentSystem.Orders.Application.Services
         // TODO: Вынести отсюда всю логику с маппингом в статик методы сущностей
         public async Task<OrderDTO> Create(CreateOrderDTO order)
         {
+            var orderByOrderNumber = await context.Orders
+                .FirstOrDefaultAsync(o => o.OrderNumber == order.OrderNumber && o.MerchantId == order.MerchantId);
+
+            if (orderByOrderNumber != null)
+            {
+                throw new DuplicateEntityException("Order", nameof(order.OrderNumber), order.OrderNumber, $"for merchant id '{order.MerchantId}'");
+            }
+
             if (order.Cart == null)
             {
                 throw new ArgumentNullException(nameof(order));

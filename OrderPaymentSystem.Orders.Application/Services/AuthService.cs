@@ -23,7 +23,7 @@ public class AuthService(IOptions<AuthOptions> authOptions,
     {
         if (await userManager.FindByEmailAsync(userRegisterDTO.Email) != null)
         {
-            throw new DuplicateEntityException("Email", userRegisterDTO.Email);
+            throw new DuplicateEntityException("User", nameof(userRegisterDTO.Email), userRegisterDTO.Email);
         }
 
         var createUserResult = await userManager.CreateAsync(new UserEntity
