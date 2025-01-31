@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OrderPaymentSystem.Orders.Domain.Exceptions;
 using OrderPaymentSystem.Orders.Domain.Extensions;
+using System.Reflection;
 using System.Text.Json;
 
 namespace OrderPaymentSystem.Orders.Web.Middlewares;
@@ -32,19 +33,14 @@ public class GlobalExceptionMiddleware(
             Extensions = { ["traceId"] = context.TraceIdentifier }
         };
 
-        switch (exception)
+        var attribute = exception.GetType().GetCustomAttribute<ProblemDetailsAttribute>();
+        if (attribute != null)
         {
-            case DuplicateEntityException dex:
-                ConfigureDuplicateEntityProblem(dex, problemDetails);
-                break;
-
-            case EntityNotFoundException nex:
-                ConfigureNotFoundProblem(nex, problemDetails);
-                break;
-
-            default:
-                ConfigureGenericProblem(problemDetails, exception, env);
-                break;
+            ApplyAttributeConfiguration(problemDetails, attribute, exception);
+        }
+        else
+        {
+            ConfigureGenericProblem(problemDetails, exception, env);
         }
 
         if (env.IsDevelopment())
@@ -67,38 +63,6 @@ public class GlobalExceptionMiddleware(
         await context.Response.WriteAsJsonAsync(problemDetails, options);
     }
 
-    private static void ConfigureDuplicateEntityProblem(
-        DuplicateEntityException ex,
-        ProblemDetails problem)
-    {
-        problem.Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8";
-        problem.Title = "Conflict";
-        problem.Status = StatusCodes.Status409Conflict;
-        problem.Detail = ex.Message;
-        problem.Extensions["entity"] = new
-        {
-            ex.EntityName,
-            ex.FieldName,
-            ex.FieldValue
-        };
-    }
-
-    private static void ConfigureNotFoundProblem(
-        EntityNotFoundException ex,
-        ProblemDetails problem)
-    {
-        problem.Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4";
-        problem.Title = "Not Found";
-        problem.Status = StatusCodes.Status404NotFound;
-        problem.Detail = ex.Message;
-        problem.Extensions["entity"] = new
-        {
-            ex.EntityName,
-            ex.FieldName,
-            ex.FieldValue
-        };
-    }
-
     private static void ConfigureGenericProblem(
         ProblemDetails problem,
         Exception exception,
@@ -110,5 +74,26 @@ public class GlobalExceptionMiddleware(
         problem.Detail = env.IsDevelopment()
             ? exception.ToString()
             : "An unexpected error occurred. Please try again later.";
+    }
+
+    private static void ApplyAttributeConfiguration(
+        ProblemDetails problem,
+        ProblemDetailsAttribute attribute,
+        Exception exception)
+    {
+        problem.Type = attribute.Type;
+        problem.Title = attribute.Title;
+        problem.Status = attribute.StatusCode;
+        problem.Detail = exception.Message;
+
+        if (attribute.IncludeEntityInfo && exception is IEntityException entityEx)
+        {
+            problem.Extensions["entity"] = new
+            {
+                entityEx.EntityName,
+                entityEx.FieldName,
+                entityEx.FieldValue
+            };
+        }
     }
 }
