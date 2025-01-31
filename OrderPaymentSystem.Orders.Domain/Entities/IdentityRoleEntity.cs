@@ -2,7 +2,4 @@
 
 namespace OrderPaymentSystem.Orders.Domain.Entities;
 
-public class IdentityRoleEntity : IdentityRole<long>
-{
-
-}
+public class IdentityRoleEntity : IdentityRole<long>;

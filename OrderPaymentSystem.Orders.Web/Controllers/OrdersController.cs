@@ -18,7 +18,6 @@ public class OrdersController(IOrdersService ordersService, ILogger<OrdersContro
 
         logger.LogInformation($"Method api/orders Create finished. Response: {JsonSerializer.Serialize(result)}");
 
-
         return Ok(result);
     }
 
@@ -38,7 +37,7 @@ public class OrdersController(IOrdersService ordersService, ILogger<OrdersContro
     [Authorize]
     public async Task<IActionResult> GetAll()
     {
-        logger.LogInformation($"Method api/orders/ started.");
+        logger.LogInformation("Method api/orders/ started.");
 
         var result = await ordersService.GetAll();
 
@@ -74,4 +73,3 @@ public class OrdersController(IOrdersService ordersService, ILogger<OrdersContro
         return Ok();
     }
 }
-

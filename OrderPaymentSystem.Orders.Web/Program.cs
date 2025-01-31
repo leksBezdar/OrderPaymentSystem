@@ -1,16 +1,10 @@
-using Microsoft.AspNetCore.HttpLogging;
 using OrderPaymentSystem.Orders.Web.Extensions;
+using OrderPaymentSystem.Orders.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddHttpLogging(opt =>
-{
-    opt.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestBody | HttpLoggingFields.RequestHeaders |
-                        HttpLoggingFields.ResponseBody | HttpLoggingFields.ResponseHeaders |
-                        HttpLoggingFields.Duration;
-});
 
 builder
     .AddBearerAuthentication()
@@ -19,11 +13,13 @@ builder
     .AddData()
     .AddApplicationServices()
     .AddIntegrationServices()
-    .AddBackgroundServices();
+    .AddBackgroundServices()
+    .AddProblemDetailsConfiguration();
 
 var app = builder.Build();
 
-app.UseHttpLogging();
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwagger();

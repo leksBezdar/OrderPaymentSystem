@@ -139,4 +139,18 @@ public static class ServiceCollectionsExtensions
 
         return builder;
     }
+
+    public static WebApplicationBuilder AddProblemDetailsConfiguration(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddProblemDetails(options =>
+        {
+            options.CustomizeProblemDetails = ctx =>
+            {
+                ctx.ProblemDetails.Extensions.Add("instance", ctx.HttpContext.Request.Path);
+                ctx.ProblemDetails.Extensions.Add("traceId", ctx.HttpContext.TraceIdentifier);
+            };
+        });
+
+        return builder;
+    }
 }

@@ -2,7 +2,4 @@
 
 namespace OrderPaymentSystem.Orders.Domain.Entities;
 
-public class UserEntity : IdentityUser<long>
-{
-
-}
+public class UserEntity : IdentityUser<long>;

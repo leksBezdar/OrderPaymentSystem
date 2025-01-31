@@ -1,9 +1,6 @@
-﻿
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using OrderPaymentSystem.Orders.Application.Abstractions;
 using OrderPaymentSystem.Orders.Application.Models.Orders;
-using OrderPaymentSystem.Orders.Application.Services;
 using OrderPaymentSystem.Orders.Domain.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;

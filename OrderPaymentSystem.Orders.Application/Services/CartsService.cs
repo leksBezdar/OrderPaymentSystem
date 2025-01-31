@@ -33,13 +33,13 @@ namespace OrderPaymentSystem.Orders.Application.Services
             return new CartDTO()
             {
                 Id = res.Id,
-                CartItems = res.CartItems!.Select(item => new CartItemDTO
+                CartItems = res.CartItems!.ConvertAll(item => new CartItemDTO
                 {
                     Id = item.Id,
                     Name = item.Name,
                     Price = item.Price,
                     Quantity = item.Quantity,
-                }).ToList()
+                })
             };
         }
     }

@@ -2,9 +2,5 @@
 
 namespace OrderPaymentSystem.Orders.Web.Controllers;
 
-
 [ApiController]
-public class ApiBaseController : ControllerBase
-{
-
-}
+public class ApiBaseController : ControllerBase;
