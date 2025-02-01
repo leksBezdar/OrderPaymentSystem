@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using OrderPaymentSystem.Orders.Domain.Entities;
+using OrderPaymentSystem.Orders.Domain.Aggregates.CartAggregate;
+using OrderPaymentSystem.Orders.Domain.Aggregates.MerchantAgregate;
+using OrderPaymentSystem.Orders.Domain.Aggregates.OrderAggregate;
+using OrderPaymentSystem.Orders.Domain.Aggregates.User;
+using OrderPaymentSystem.Orders.Domain.Aggregates.UserAggregate;
 
 namespace OrderPaymentSystem.Orders.Domain;
 
-public sealed class OrdersDbContext : IdentityDbContext<UserEntity, IdentityRoleEntity, long>
+public sealed class OrdersDbContext : IdentityDbContext<User, IdentityRole, long>
 {
     public OrdersDbContext(DbContextOptions<OrdersDbContext> options) : base(options)
     {
@@ -14,9 +18,8 @@ public sealed class OrdersDbContext : IdentityDbContext<UserEntity, IdentityRole
         }
     }
 
-    public DbSet<CustomerEntity> Customers { get; set; } = null!;
-    public DbSet<CartEntity> Carts { get; set; } = null!;
-    public DbSet<CartItemEntity> CartItems { get; set; } = null!;
-    public DbSet<OrderEntity> Orders { get; set; } = null!;
-    public DbSet<MerchantEntity> Merchants { get; set; } = null!;
+    public DbSet<Cart> Carts { get; set; } = null!;
+    public DbSet<CartItem> CartItems { get; set; } = null!;
+    public DbSet<Order> Orders { get; set; } = null!;
+    public DbSet<Merchant> Merchants { get; set; } = null!;
 }

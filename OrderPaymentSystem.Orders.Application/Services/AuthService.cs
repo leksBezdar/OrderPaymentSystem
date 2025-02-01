@@ -3,9 +3,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OrderPaymentSystem.Orders.Application.Abstractions;
 using OrderPaymentSystem.Orders.Application.Models.Authentication;
-using OrderPaymentSystem.Orders.Domain.Entities;
+using OrderPaymentSystem.Orders.Domain.Aggregates.UserAggregate;
+using OrderPaymentSystem.Orders.Domain.Enums;
 using OrderPaymentSystem.Orders.Domain.Exceptions;
-using OrderPaymentSystem.Orders.Domain.Models;
 using OrderPaymentSystem.Orders.Domain.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Authentication;
@@ -15,7 +15,7 @@ using System.Text;
 namespace OrderPaymentSystem.Orders.Application.Services;
 
 public class AuthService(IOptions<AuthOptions> authOptions,
-    UserManager<UserEntity> userManager) : IAuthService
+    UserManager<User> userManager) : IAuthService
 {
     private readonly AuthOptions _authOptions = authOptions.Value;
 
@@ -26,7 +26,7 @@ public class AuthService(IOptions<AuthOptions> authOptions,
             throw new DuplicateEntityException("User", nameof(userRegisterDTO.Email), userRegisterDTO.Email);
         }
 
-        var createUserResult = await userManager.CreateAsync(new UserEntity
+        var createUserResult = await userManager.CreateAsync(new User
         {
             Email = userRegisterDTO.Email,
             PhoneNumber = userRegisterDTO.Phone,

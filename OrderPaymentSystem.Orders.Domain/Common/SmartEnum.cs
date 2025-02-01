@@ -1,4 +1,4 @@
-﻿namespace OrderPaymentSystem.Orders.Domain.Models;
+﻿namespace OrderPaymentSystem.Orders.Domain.Common;
 
 public abstract class SmartEnum<T>(string value) where T : SmartEnum<T>
 {

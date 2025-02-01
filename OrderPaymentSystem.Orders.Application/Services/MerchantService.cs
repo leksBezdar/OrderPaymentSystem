@@ -9,7 +9,7 @@ public class MerchantService(OrdersDbContext context) : IMerchantService
 {
     public async Task<MerchantDTO> Create(MerchantDTO merchant)
     {
-        var entity = new MerchantEntity
+        var entity = new Merchant
         {
             Name = merchant.Name,
             Phone = merchant.Phone,

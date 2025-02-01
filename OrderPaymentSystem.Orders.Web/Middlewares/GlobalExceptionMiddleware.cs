@@ -75,7 +75,7 @@ public class GlobalExceptionMiddleware(
             ? exception.ToString()
             : "An unexpected error occurred. Please try again later.";
     }
-
+     
     private static void ApplyAttributeConfiguration(
         ProblemDetails problem,
         ProblemDetailsAttribute attribute,

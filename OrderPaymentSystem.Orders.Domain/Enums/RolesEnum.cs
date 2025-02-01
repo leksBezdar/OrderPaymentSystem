@@ -1,4 +1,6 @@
-﻿namespace OrderPaymentSystem.Orders.Domain.Models;
+﻿using OrderPaymentSystem.Orders.Domain.Common;
+
+namespace OrderPaymentSystem.Orders.Domain.Enums;
 
 public sealed class RolesEnum : SmartEnum<RolesEnum>
 {

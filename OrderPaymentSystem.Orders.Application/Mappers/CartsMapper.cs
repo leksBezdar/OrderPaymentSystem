@@ -1,11 +1,12 @@
 ﻿using OrderPaymentSystem.Orders.Application.Models.Carts;
+using OrderPaymentSystem.Orders.Domain.Aggregates.CartAggregate;
 using OrderPaymentSystem.Orders.Domain.Entities;
 
 namespace OrderPaymentSystem.Orders.Application.Mappers;
 
 public static class CartsMapper
 {
-    public static CartDTO ToDTO(this CartEntity cart)
+    public static CartDTO ToDTO(this Cart cart)
     {
         return new CartDTO()
         {
@@ -20,9 +21,9 @@ public static class CartsMapper
         };
     }
 
-    public static CartEntity ToEntity(this CartDTO cart)
+    public static Cart ToEntity(this CartDTO cart)
     {
-        return new CartEntity()
+        return new Cart()
         {
             CartItems = cart.CartItems.ConvertAll(cart => cart.ToEntity())
         };

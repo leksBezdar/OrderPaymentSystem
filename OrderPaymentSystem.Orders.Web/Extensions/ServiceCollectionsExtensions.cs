@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Models;
 using OrderPaymentSystem.Orders.Application.Abstractions;
 using OrderPaymentSystem.Orders.Application.Services;
 using OrderPaymentSystem.Orders.Domain;
-using OrderPaymentSystem.Orders.Domain.Entities;
 using OrderPaymentSystem.Orders.Domain.Models;
 using OrderPaymentSystem.Orders.Domain.Options;
 using OrderPaymentSystem.Orders.Web.BackgroundServices;
@@ -127,7 +126,7 @@ public static class ServiceCollectionsExtensions
         })
             .AddEntityFrameworkStores<OrdersDbContext>()
             .AddUserManager<UserManager<UserEntity>>()
-            .AddUserStore<UserStore<UserEntity, IdentityRoleEntity, OrdersDbContext, long>>();
+            .AddUserStore<UserStore<UserEntity, Domain.Aggregates.User.IdentityRole, OrdersDbContext, long>>();
 
         return builder;
     }
